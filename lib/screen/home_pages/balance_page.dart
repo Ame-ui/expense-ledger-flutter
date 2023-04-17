@@ -49,14 +49,14 @@ class BalancePage extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
+                                        const SizedBox(width: 5),
                                         Text(
                                           'Sep 20, 2023',
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge
                                               ?.copyWith(
-                                                  color: Colors.white
-                                                      .withOpacity(0.8),
+                                                  color: Colors.white,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w400),
                                         ),
@@ -79,14 +79,14 @@ class BalancePage extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
+                                        const SizedBox(width: 5),
                                         Text(
                                           'Monthly',
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge
                                               ?.copyWith(
-                                                  color: Colors.white
-                                                      .withOpacity(0.8),
+                                                  color: Colors.white,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w400),
                                         ),
@@ -242,35 +242,54 @@ class BalancePage extends StatelessWidget {
                   )
                 ],
               ),
+              /* list of expense with date */
               Expanded(
-                  child: ListView.builder(
-                      itemCount: 0,
-                      itemBuilder: ((context, index) {
-                        return BalanceListTile(
-                            dateTime: DateTime.now(),
-                            expenseList: [
-                              Expense(
-                                  type: 'expense',
-                                  amount: 10000,
-                                  category: 'Transport',
-                                  dateTime: DateTime.now()),
-                              Expense(
-                                  type: 'income',
-                                  amount: 10000,
-                                  category: 'Cash',
-                                  dateTime: DateTime.now()),
-                              Expense(
-                                  type: 'expense',
-                                  amount: 10000,
-                                  category: 'Food',
-                                  dateTime: DateTime.now()),
-                              Expense(
-                                  type: 'expense',
-                                  amount: 0000,
-                                  category: 'Food',
-                                  dateTime: DateTime.now())
-                            ]);
-                      })))
+                  child: Padding(
+                padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                child: ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: ((context, index) {
+                      return BalanceListTile(
+                          dateTime: DateTime.now(),
+                          expenseList: [
+                            Expense(
+                                type: 'expense',
+                                amount: 10000,
+                                category: 'Transport',
+                                dateTime: DateTime.now()),
+                            Expense(
+                                type: 'income',
+                                amount: 10000,
+                                category: 'Cash',
+                                dateTime: DateTime.now()),
+                            Expense(
+                                type: 'income',
+                                amount: 10000,
+                                category: 'Food',
+                                dateTime: DateTime.now()),
+                            Expense(
+                                type: 'expense',
+                                amount: 2000,
+                                category: 'Food',
+                                dateTime: DateTime.now()),
+                            Expense(
+                                type: 'income',
+                                amount: 1000,
+                                category: 'Food',
+                                dateTime: DateTime.now()),
+                            Expense(
+                                type: 'expense',
+                                amount: 2000,
+                                category: 'Food',
+                                dateTime: DateTime.now()),
+                            Expense(
+                                type: 'income',
+                                amount: 1000,
+                                category: 'Food',
+                                dateTime: DateTime.now()),
+                          ]);
+                    })),
+              ))
             ],
           ),
         ),

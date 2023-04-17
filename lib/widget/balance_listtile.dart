@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 class BalanceListTile extends StatelessWidget {
   BalanceListTile(
       {super.key, required this.dateTime, required this.expenseList});
-  /* required to show */
+  /* required data */
   final DateTime dateTime;
   final List<Expense> expenseList;
 
@@ -14,24 +14,33 @@ class BalanceListTile extends StatelessWidget {
   int totalIncome = 0;
   int totalExpense = 0;
   int totalBalance = 0;
-  DateFormat formatter = DateFormat('MMM d, y');
-  bool isNegative = false;
+  int otherIncome = 0;
+  int otherExpense = 0;
+  DateFormat dateFormatter = DateFormat('MMM d, y');
+  NumberFormat numFormatter = NumberFormat('#,##0');
+
   @override
   Widget build(BuildContext context) {
-    for (var expense in expenseList) {
-      if (expense.type == 'income') {
-        totalIncome += expense.amount;
+    /* Calculate totalIncome, totalExpense, and TotalOther */
+    for (int i = 0; i < expenseList.length; i++) {
+      if (expenseList[i].type == 'income') {
+        totalIncome += expenseList[i].amount;
+        /* if item count >3 then amount of rest expense will also add to totalOther */
+        if (i > 2) {
+          otherIncome += expenseList[i].amount;
+        }
       } else {
-        totalExpense += expense.amount;
+        totalExpense += expenseList[i].amount;
+        /* if item count >3 then amount of rest expense will also add to totalOther */
+        if (i > 2) {
+          otherExpense += expenseList[i].amount;
+        }
       }
     }
-    if (totalIncome < totalExpense) {
-      isNegative = true;
-    } else {
-      isNegative = false;
-    }
     totalBalance = totalIncome - totalExpense;
+
     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -39,65 +48,130 @@ class BalanceListTile extends StatelessWidget {
       ),
       child: Column(
         children: [
+          /* date and balancce */
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              /* date */
               Text(
-                formatter.format(dateTime),
+                dateFormatter.format(dateTime),
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge
-                    ?.copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+                    ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
               ),
+              /* total balance */
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: MyColors.primaryColor.withOpacity(0.1)),
                 child: Text(
-                  isNegative
-                      ? '-'
-                      : '+'
-                          ' {$totalBalance} MMK',
+                  '${numFormatter.format(totalBalance)} MMK',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: MyColors.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ],
           ),
           const Divider(),
+          /* list of category and amount */
           SizedBox(
-            height: 300,
+            height: expenseList.length > 3 ? 90 : expenseList.length * 30,
             child: ListView.builder(
-                itemCount: 3,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                itemCount: expenseList.length > 3 ? 3 : expenseList.length,
                 itemBuilder: ((context, index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        expenseList[index].category,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        expenseList[index].type == 'expense'
-                            ? '-'
-                            : '+'
-                                ' {$totalBalance} MMK',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: expenseList[index].type == 'expense'
-                                ? MyColors.redColor
-                                : MyColors.greenColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        /* Category */
+                        Text(
+                          expenseList[index].category,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        /* Amount */
+                        Text(
+                          (expenseList[index].type == 'expense' ? '-' : '+') +
+                              ('${numFormatter.format(expenseList[index].amount)} MMK'),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  color: expenseList[index].type == 'expense'
+                                      ? MyColors.redColor
+                                      : MyColors.greenColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   );
                 })),
           ),
+          Visibility(
+              visible: expenseList.length > 3,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '(${expenseList.length - 3}) Other',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '${otherIncome.isNegative ? '-' : '+'}${numFormatter.format(otherIncome)} MMK',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: MyColors.greenColor,
+                                  // totalOther.isNegative
+                                  //     ? MyColors.redColor
+                                  //     : MyColors.greenColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          ' / ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          '${otherExpense.isNegative ? '-' : '+'}${numFormatter.format(otherExpense)} MMK',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: MyColors.redColor,
+                                  // totalOther.isNegative
+                                  //     ? MyColors.redColor
+                                  //     : MyColors.greenColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
           const Divider(),
+          /* Total Income amount */
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -107,25 +181,26 @@ class BalanceListTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                     color: MyColors.greenColor.withOpacity(0.1)),
                 child: Text(
-                  '+ {$totalIncome} MMK',
+                  '+${numFormatter.format(totalIncome)} MMK',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: MyColors.greenColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(width: 10),
+              /* Total Expense amount */
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: MyColors.redColor.withOpacity(0.1)),
                 child: Text(
-                  '- {$totalExpense} MMK',
+                  '-${numFormatter.format(totalExpense)} MMK',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: MyColors.redColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ],

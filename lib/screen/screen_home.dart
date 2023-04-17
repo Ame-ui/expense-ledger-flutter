@@ -4,6 +4,7 @@ import 'package:expense_ledger/screen/home_pages/calendar_page.dart';
 import 'package:expense_ledger/screen/home_pages/setting_page.dart';
 import 'package:expense_ledger/screen/home_pages/statistics_page.dart';
 import 'package:expense_ledger/value/my_icons.dart';
+import 'package:expense_ledger/value/route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,15 @@ class HomeScreen extends StatelessWidget {
                 : provider.homePagesIndex == 2
                     ? const StatisticsPage()
                     : const SettingPage(),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(RouteName.createExpense);
+            },
+            child: const Icon(
+              Icons.add_rounded,
+              size: 30,
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: provider.homePagesIndex,
             onTap: (value) {

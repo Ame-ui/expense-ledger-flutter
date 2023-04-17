@@ -1,3 +1,4 @@
+import 'package:expense_ledger/provider/provider_create_expense.dart';
 import 'package:expense_ledger/provider/provider_home.dart';
 import 'package:expense_ledger/route/routes.dart';
 import 'package:expense_ledger/theme/custom_theme.dart';
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HomeProvider>(
-            create: ((context) => HomeProvider()))
+            create: ((context) => HomeProvider())),
+        ChangeNotifierProvider<CreateExpenseProvider>(
+            create: ((context) => CreateExpenseProvider()))
       ],
       child: MaterialApp(
         theme: CustomTheme.lightTheme,

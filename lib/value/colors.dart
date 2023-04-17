@@ -10,7 +10,7 @@ class MyColors {
   static const Color greenColor = Color(0xff2ED33F);
   static const Color redColor = Color(0xffE52323);
   static const Color backgroundColor = Color(0xfff4f5f8);
-  static const Color textFieldColor = Color(0xffF7F7F7);
+  static const Color textFieldColor = Color(0xffF4f4f4);
 
   static const Color pieColor1 = Color(0xffFD4B4B);
   static const Color pieColor2 = Color(0xffFDB64B);

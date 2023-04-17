@@ -7,15 +7,19 @@ class CustomTheme {
     colorScheme: const ColorScheme.light().copyWith(
       // brightness: Brightness.dark,
       primary: MyColors.primaryColor,
+
       shadow: Colors.black.withOpacity(0.1),
     ),
     brightness: Brightness.light,
     primaryColor: MyColors.primaryColor,
     appBarTheme: const AppBarTheme(
+      foregroundColor: MyColors.secondaryTxtColor,
       backgroundColor: Colors.white,
       elevation: 0,
     ),
     scaffoldBackgroundColor: MyColors.backgroundColor,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: MyColors.primaryColor, foregroundColor: Colors.white),
     hintColor: MyColors.greyColor,
     iconTheme: const IconThemeData(color: MyColors.secondaryTxtColor),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -50,9 +54,15 @@ class CustomTheme {
       type: BottomNavigationBarType.fixed,
     ),
     shadowColor: Colors.black.withOpacity(0.1),
-    textButtonTheme: const TextButtonThemeData(
+    textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: MaterialStatePropertyAll(MyColors.primaryColor),
+        textStyle: MaterialStatePropertyAll(
+          TextStyle(
+              color: MyColors.primaryColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              fontFamily: GoogleFonts.poppins().fontFamily),
+        ),
       ),
     ),
     tabBarTheme: const TabBarTheme(
@@ -113,6 +123,6 @@ class CustomTheme {
       // titleSmall: TextStyle(fontFamily: GoogleFonts.poppins().fontFamily),
     ),
     dividerTheme: const DividerThemeData(
-        color: MyColors.inactiveColor, thickness: 0.5, space: 10),
+        color: MyColors.inactiveColor, thickness: 0.5, space: 20),
   );
 }
