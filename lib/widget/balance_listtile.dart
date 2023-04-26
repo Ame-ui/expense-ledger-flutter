@@ -1,7 +1,7 @@
-import 'package:expense_ledger/model/model_expense.dart';
+import 'package:expense_ledger/model/expense.dart';
 import 'package:expense_ledger/value/colors.dart';
+import 'package:expense_ledger/value/formatters.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class BalanceListTile extends StatelessWidget {
   BalanceListTile(
@@ -11,19 +11,17 @@ class BalanceListTile extends StatelessWidget {
   final List<Expense> expenseList;
 
   /* required to calculate */
-  int totalIncome = 0;
-  int totalExpense = 0;
-  int totalBalance = 0;
-  int otherIncome = 0;
-  int otherExpense = 0;
-  DateFormat dateFormatter = DateFormat('MMM d, y');
-  NumberFormat numFormatter = NumberFormat('#,##0');
 
   @override
   Widget build(BuildContext context) {
+    int totalIncome = 0;
+    int totalExpense = 0;
+    int totalBalance = 0;
+    int otherIncome = 0;
+    int otherExpense = 0;
     /* Calculate totalIncome, totalExpense, and TotalOther */
     for (int i = 0; i < expenseList.length; i++) {
-      if (expenseList[i].type == 'income') {
+      if (expenseList[i].category.type == 'income') {
         totalIncome += expenseList[i].amount;
         /* if item count >3 then amount of rest expense will also add to totalOther */
         if (i > 2) {
@@ -53,25 +51,31 @@ class BalanceListTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               /* date */
-              Text(
-                dateFormatter.format(dateTime),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+              Flexible(
+                flex: 1,
+                child: Text(
+                  MyFormatters.dateFormatter.format(dateTime),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
               ),
               /* total balance */
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: MyColors.primaryColor.withOpacity(0.1)),
-                child: Text(
-                  '${numFormatter.format(totalBalance)} MMK',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: MyColors.primaryColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600),
+              Flexible(
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: MyColors.primaryTxtColor.withOpacity(0.1)),
+                  child: Text(
+                    '${MyFormatters.numFormatter.format(totalBalance)} MMK',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: MyColors.primaryTxtColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
             ],
@@ -79,6 +83,7 @@ class BalanceListTile extends StatelessWidget {
           const Divider(),
           /* list of category and amount */
           SizedBox(
+            //flexible height (max : 4)
             height: expenseList.length > 3 ? 90 : expenseList.length * 30,
             child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -92,7 +97,7 @@ class BalanceListTile extends StatelessWidget {
                       children: [
                         /* Category */
                         Text(
-                          expenseList[index].category,
+                          expenseList[index].category.name,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
@@ -101,13 +106,17 @@ class BalanceListTile extends StatelessWidget {
                         ),
                         /* Amount */
                         Text(
-                          (expenseList[index].type == 'expense' ? '-' : '+') +
-                              ('${numFormatter.format(expenseList[index].amount)} MMK'),
+                          (expenseList[index].category.type == 'expense'
+                                  ? '-'
+                                  : '+') +
+                              (MyFormatters.numFormatter
+                                  .format(expenseList[index].amount)),
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
                               ?.copyWith(
-                                  color: expenseList[index].type == 'expense'
+                                  color: expenseList[index].category.type ==
+                                          'expense'
                                       ? MyColors.redColor
                                       : MyColors.greenColor,
                                   fontSize: 14,
@@ -118,6 +127,7 @@ class BalanceListTile extends StatelessWidget {
                   );
                 })),
           ),
+          /* if list is more than 3 then show only -(number of rest expense) Other- */
           Visibility(
               visible: expenseList.length > 3,
               child: Padding(
@@ -136,7 +146,7 @@ class BalanceListTile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '${otherIncome.isNegative ? '-' : '+'}${numFormatter.format(otherIncome)} MMK',
+                          '+${MyFormatters.numFormatter.format(otherIncome)}',
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: MyColors.greenColor,
@@ -155,7 +165,7 @@ class BalanceListTile extends StatelessWidget {
                                   fontSize: 14, fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          '${otherExpense.isNegative ? '-' : '+'}${numFormatter.format(otherExpense)} MMK',
+                          '-${MyFormatters.numFormatter.format(otherExpense)}',
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                   color: MyColors.redColor,
@@ -181,7 +191,7 @@ class BalanceListTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                     color: MyColors.greenColor.withOpacity(0.1)),
                 child: Text(
-                  '+${numFormatter.format(totalIncome)} MMK',
+                  '+${MyFormatters.numFormatter.format(totalIncome)} MMK',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: MyColors.greenColor,
                       fontSize: 15,
@@ -196,7 +206,7 @@ class BalanceListTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                     color: MyColors.redColor.withOpacity(0.1)),
                 child: Text(
-                  '-${numFormatter.format(totalExpense)} MMK',
+                  '-${MyFormatters.numFormatter.format(totalExpense)} MMK',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: MyColors.redColor,
                       fontSize: 15,

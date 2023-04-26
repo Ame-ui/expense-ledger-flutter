@@ -1,3 +1,5 @@
+import 'package:expense_ledger/provider/provider_balance.dart';
+import 'package:expense_ledger/provider/provider_calendar.dart';
 import 'package:expense_ledger/provider/provider_create_expense.dart';
 import 'package:expense_ledger/provider/provider_home.dart';
 import 'package:expense_ledger/route/routes.dart';
@@ -7,7 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<HomeProvider>(create: ((context) => HomeProvider())),
+    ChangeNotifierProvider<CreateExpenseProvider>(
+        create: ((context) => CreateExpenseProvider())),
+    ChangeNotifierProvider<BalanceProvider>(
+        create: ((context) => BalanceProvider())),
+    ChangeNotifierProvider<CalendarProvider>(
+        create: ((context) => CalendarProvider()))
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,19 +25,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<HomeProvider>(
-            create: ((context) => HomeProvider())),
-        ChangeNotifierProvider<CreateExpenseProvider>(
-            create: ((context) => CreateExpenseProvider()))
-      ],
-      child: MaterialApp(
-        theme: CustomTheme.lightTheme,
-        initialRoute: RouteName.getInitialRoute(),
-        onGenerateRoute: Routes.generate,
-        debugShowCheckedModeBanner: false,
-      ),
+    Provider.of<BalanceProvider>(context, listen: false).specifyExpense();
+    print('rebuild');
+    return MaterialApp(
+      theme: CustomTheme.lightTheme,
+      initialRoute: RouteName.getInitialRoute(),
+      onGenerateRoute: Routes.generate,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

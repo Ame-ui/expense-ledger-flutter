@@ -5,12 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomTheme {
   static ThemeData lightTheme = ThemeData.light().copyWith(
     colorScheme: const ColorScheme.light().copyWith(
-      // brightness: Brightness.dark,
       primary: MyColors.primaryColor,
-
       shadow: Colors.black.withOpacity(0.1),
     ),
-    brightness: Brightness.light,
     primaryColor: MyColors.primaryColor,
     appBarTheme: const AppBarTheme(
       foregroundColor: MyColors.secondaryTxtColor,
@@ -34,6 +31,7 @@ class CustomTheme {
       fillColor: MaterialStatePropertyAll(MyColors.primaryColor),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
       backgroundColor: Colors.white,
       elevation: 1,
       showSelectedLabels: true,
@@ -43,12 +41,12 @@ class CustomTheme {
       selectedIconTheme: const IconThemeData(size: 20),
       unselectedIconTheme: const IconThemeData(size: 20),
       selectedLabelStyle: TextStyle(
-          fontSize: 12,
+          fontSize: 10,
           fontFamily: GoogleFonts.poppins().fontFamily,
           fontWeight: FontWeight.w400),
       unselectedLabelStyle: TextStyle(
           color: MyColors.greyColor,
-          fontSize: 12,
+          fontSize: 10,
           fontFamily: GoogleFonts.poppins().fontFamily,
           fontWeight: FontWeight.w500),
       type: BottomNavigationBarType.fixed,

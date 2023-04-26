@@ -1,7 +1,9 @@
-import 'package:expense_ledger/model/model_expense.dart';
+import 'package:expense_ledger/model/expense.dart';
+import 'package:expense_ledger/provider/provider_balance.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/widget/balance_listtile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BalancePage extends StatelessWidget {
   const BalancePage({super.key});
@@ -9,7 +11,7 @@ class BalancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color.fromRGBO(35, 113, 229, 1),
+      color: MyColors.primaryColor,
       child: SafeArea(
         child: Container(
           color: MyColors.backgroundColor,
@@ -246,50 +248,20 @@ class BalancePage extends StatelessWidget {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                child: ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: ((context, index) {
-                      return BalanceListTile(
-                          dateTime: DateTime.now(),
-                          expenseList: [
-                            Expense(
-                                type: 'expense',
-                                amount: 10000,
-                                category: 'Transport',
-                                dateTime: DateTime.now()),
-                            Expense(
-                                type: 'income',
-                                amount: 10000,
-                                category: 'Cash',
-                                dateTime: DateTime.now()),
-                            Expense(
-                                type: 'income',
-                                amount: 10000,
-                                category: 'Food',
-                                dateTime: DateTime.now()),
-                            Expense(
-                                type: 'expense',
-                                amount: 2000,
-                                category: 'Food',
-                                dateTime: DateTime.now()),
-                            Expense(
-                                type: 'income',
-                                amount: 1000,
-                                category: 'Food',
-                                dateTime: DateTime.now()),
-                            Expense(
-                                type: 'expense',
-                                amount: 2000,
-                                category: 'Food',
-                                dateTime: DateTime.now()),
-                            Expense(
-                                type: 'income',
-                                amount: 1000,
-                                category: 'Food',
-                                dateTime: DateTime.now()),
-                          ]);
-                    })),
-              ))
+                child: Selector<BalanceProvider, Map<DateTime, List<Expense>>>(
+                    selector: (p0, p1) => p1.expenseListByDate,
+                    builder: (context, expenseListByDate, child) {
+                      return ListView.builder(
+                          itemCount: expenseListByDate.length,
+                          itemBuilder: ((context, index) {
+                            return BalanceListTile(
+                                dateTime:
+                                    expenseListByDate.keys.elementAt(index),
+                                expenseList:
+                                    expenseListByDate.values.elementAt(index));
+                          }));
+                    }),
+              )),
             ],
           ),
         ),

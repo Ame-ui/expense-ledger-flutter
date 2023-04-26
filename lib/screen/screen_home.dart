@@ -1,8 +1,8 @@
 import 'package:expense_ledger/provider/provider_home.dart';
-import 'package:expense_ledger/screen/home_pages/balance_page.dart';
-import 'package:expense_ledger/screen/home_pages/calendar_page.dart';
-import 'package:expense_ledger/screen/home_pages/setting_page.dart';
-import 'package:expense_ledger/screen/home_pages/statistics_page.dart';
+import 'package:expense_ledger/screen/home_pages/balance.dart';
+import 'package:expense_ledger/screen/home_pages/calendar.dart';
+import 'package:expense_ledger/screen/home_pages/setting.dart';
+import 'package:expense_ledger/screen/home_pages/statistics.dart';
 import 'package:expense_ledger/value/my_icons.dart';
 import 'package:expense_ledger/value/route_names.dart';
 import 'package:flutter/material.dart';
