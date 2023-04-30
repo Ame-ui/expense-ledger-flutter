@@ -13,8 +13,8 @@ class MyFormatters {
       json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
   //category list json formatter
-  List<Category> categoryListFromJson(String str) =>
+  static List<Category> categoryListFromJson(String str) =>
       List<Category>.from(json.decode(str).map((x) => Category.fromJson(x)));
-  String categoryListToJson(List<Category> data) =>
+  static String categoryListToJson(List<Category> data) =>
       json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 }

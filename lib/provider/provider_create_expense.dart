@@ -1,5 +1,7 @@
 import 'package:expense_ledger/model/category.dart';
+import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class CreateExpenseProvider extends ChangeNotifier {
   bool isCustomKeyboardOpen = false;
@@ -25,35 +27,21 @@ class CreateExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Category> categoryList = [
-    Category(name: 'Transport', type: 'expense'),
-    Category(name: 'Cash', type: 'income'),
-    Category(name: 'Commision', type: 'income'),
-    Category(name: 'Food', type: 'expense'),
-    Category(name: 'Repair', type: 'expense'),
-    Category(name: 'Hospital', type: 'expense'),
-    Category(name: 'Salary', type: 'income'),
-  ];
-  int initCategoryList() {
-    int selectedIndex = categoryList.indexOf(
-        categoryList.firstWhere((element) => element.type == 'income'));
-    categoryList[selectedIndex].isSelected = true;
-    return selectedIndex;
-  }
-
-  void swapSelectedCategory(int oldIndex, int newIndex) {
-    categoryList[oldIndex].isSelected = false;
-    categoryList[newIndex].isSelected = true;
-    notifyListeners();
-  }
-
-  void resetValues() {
+  void resetValues(BuildContext context) {
     isCustomKeyboardOpen = false;
     isNoteOpen = false;
     amount = '';
-    for (var element in categoryList) {
+    var categoryProvider =
+        Provider.of<CategoryProvider>(context, listen: false);
+    for (var element in categoryProvider.categoryList) {
       element.isSelected = false;
     }
+    notifyListeners();
+  }
+
+  DateTime selectedDate = DateTime.now();
+  void setSelectedDate(DateTime newDate) {
+    selectedDate = newDate;
     notifyListeners();
   }
 }

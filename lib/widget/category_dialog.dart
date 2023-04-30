@@ -1,6 +1,8 @@
 import 'package:expense_ledger/model/category.dart';
+import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryDialog extends StatefulWidget {
   const CategoryDialog({super.key, required this.category});
@@ -13,6 +15,7 @@ class CategoryDialog extends StatefulWidget {
 class _CategoryDialogState extends State<CategoryDialog> {
   final TextEditingController _nameTextController = TextEditingController();
   String selectedType = 'income';
+  bool isNew = false;
   @override
   void dispose() {
     _nameTextController.dispose();
@@ -20,10 +23,21 @@ class _CategoryDialogState extends State<CategoryDialog> {
   }
 
   @override
+  void initState() {
+    if (widget.category.name.isEmpty) {
+      isNew = true;
+    } else {
+      _nameTextController.text = widget.category.name;
+      selectedType = widget.category.type;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        '${widget.category.name == '' ? 'New' : 'Edit'} Category',
+        '${isNew ? 'New' : 'Edit'} Category',
         style: Theme.of(context)
             .textTheme
             .bodyLarge
@@ -33,7 +47,11 @@ class _CategoryDialogState extends State<CategoryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Name', style: Theme.of(context).textTheme.bodyLarge),
+          Text('Name',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: 14)),
           TextFormField(
             onTap: () {},
             controller: _nameTextController,
@@ -50,7 +68,11 @@ class _CategoryDialogState extends State<CategoryDialog> {
             ),
           ),
           const SizedBox(height: 10),
-          Text('Type', style: Theme.of(context).textTheme.bodyLarge),
+          Text('Type',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: 14)),
           Column(
             children: [
               Row(
@@ -61,11 +83,14 @@ class _CategoryDialogState extends State<CategoryDialog> {
                       onChanged: ((value) => setState(() {
                             selectedType = value as String;
                           }))),
-                  Text('Income',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(fontSize: 14))
+                  TextButton(
+                      onPressed: (() {
+                        setState(() {
+                          selectedType = 'income';
+                        });
+                      }),
+                      child: Text('Income',
+                          style: Theme.of(context).textTheme.bodyLarge))
                 ],
               ),
               Row(
@@ -76,11 +101,14 @@ class _CategoryDialogState extends State<CategoryDialog> {
                       onChanged: ((value) => setState(() {
                             selectedType = value as String;
                           }))),
-                  Text('Expense',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(fontSize: 14))
+                  TextButton(
+                      onPressed: (() {
+                        setState(() {
+                          selectedType = 'expense';
+                        });
+                      }),
+                      child: Text('Expense',
+                          style: Theme.of(context).textTheme.bodyLarge))
                 ],
               ),
             ],
@@ -92,7 +120,19 @@ class _CategoryDialogState extends State<CategoryDialog> {
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel')),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            var categoryProvider =
+                Provider.of<CategoryProvider>(context, listen: false);
+            if (isNew) {
+              categoryProvider.addToCategoryList(
+                  Category(name: _nameTextController.text, type: selectedType));
+            } else {
+              categoryProvider.editCategoryList(
+                  Category(name: _nameTextController.text, type: selectedType),
+                  widget.category);
+            }
+            Navigator.of(context).pop();
+          },
           child: Text(
             "Save",
             style: Theme.of(context)

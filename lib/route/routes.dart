@@ -1,3 +1,4 @@
+import 'package:expense_ledger/screen/screen_catrgory.dart';
 import 'package:expense_ledger/screen/screen_create_expense.dart';
 import 'package:expense_ledger/screen/screen_home.dart';
 import 'package:expense_ledger/screen/screen_splash.dart';
@@ -20,6 +21,10 @@ class Routes {
       case RouteName.createExpense:
         return MaterialPageRoute(
           builder: (context) => const CreateExpenseScreen(),
+        );
+      case RouteName.category:
+        return MaterialPageRoute(
+          builder: (context) => const CategoryScreen(),
         );
       default:
         return MaterialPageRoute(

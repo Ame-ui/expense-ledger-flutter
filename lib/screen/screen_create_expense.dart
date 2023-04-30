@@ -1,7 +1,11 @@
 import 'package:expense_ledger/model/category.dart';
+import 'package:expense_ledger/model/expense.dart';
+import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:expense_ledger/provider/provider_create_expense.dart';
+import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
+import 'package:expense_ledger/value/route_names.dart';
 import 'package:expense_ledger/widget/category_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +19,8 @@ class CreateExpenseScreen extends StatefulWidget {
 
 class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
   final TextEditingController _noteTextController = TextEditingController();
+  int previousCategoryIndex = 0;
+  Category selectedCategory = Category(name: '', type: '');
 
   @override
   void dispose() {
@@ -23,18 +29,28 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
   }
 
   @override
+  void initState() {
+    // select fist income category
+    previousCategoryIndex =
+        Provider.of<CategoryProvider>(context, listen: false)
+            .setInitSelectedValue();
+    selectedCategory = Provider.of<CategoryProvider>(context, listen: false)
+        .categoryList[previousCategoryIndex];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var createExpenseProvider =
         Provider.of<CreateExpenseProvider>(context, listen: false);
-    // select fist income category
-    int previousCategoryIndex = createExpenseProvider.initCategoryList();
+    var expenseProvider = Provider.of<ExpenseProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
         if (createExpenseProvider.isCustomKeyboardOpen) {
           createExpenseProvider.changeKeyboardState(false);
           return false;
         } else {
-          createExpenseProvider.resetValues();
+          createExpenseProvider.resetValues(context);
           return true;
         }
       },
@@ -54,7 +70,22 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //new expense to add
+                    Expense newExpense = Expense(
+                        amount: int.parse(createExpenseProvider.amount),
+                        category: selectedCategory,
+                        dateTime: createExpenseProvider.selectedDate,
+                        note: _noteTextController.text);
+                    //adding new expense
+                    expenseProvider.addtoExpenseList(newExpense);
+                    Navigator.of(context).pop();
+                    //reset all value
+                    previousCategoryIndex = 0;
+                    selectedCategory = Category(name: '', type: '');
+
+                    createExpenseProvider.resetValues(context);
+                  },
                   child: Text(
                     "Save",
                     style: Theme.of(context)
@@ -115,11 +146,12 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                           ),
                                         ],
                                       ),
+                                      const Divider(height: 0),
                                       /* Category List */
                                       Container(
                                         padding: const EdgeInsets.all(10),
                                         height: 250,
-                                        child: Consumer<CreateExpenseProvider>(
+                                        child: Consumer<CategoryProvider>(
                                             builder:
                                                 (context, provider, child) {
                                           return TabBarView(children: [
@@ -136,10 +168,11 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                                 }
                                                 return InkWell(
                                                   onTap: () {
-                                                    createExpenseProvider
-                                                        .swapSelectedCategory(
-                                                            previousCategoryIndex,
-                                                            index);
+                                                    provider.swapSelectedCategory(
+                                                        previousCategoryIndex,
+                                                        index);
+                                                    selectedCategory = provider
+                                                        .categoryList[index];
                                                     previousCategoryIndex =
                                                         index;
                                                   },
@@ -187,10 +220,11 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                                 }
                                                 return InkWell(
                                                   onTap: () {
-                                                    createExpenseProvider
-                                                        .swapSelectedCategory(
-                                                            previousCategoryIndex,
-                                                            index);
+                                                    provider.swapSelectedCategory(
+                                                        previousCategoryIndex,
+                                                        index);
+                                                    selectedCategory = provider
+                                                        .categoryList[index];
                                                     previousCategoryIndex =
                                                         index;
                                                   },
@@ -234,16 +268,10 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                 const Divider(height: 0),
                                 TextButton(
                                     onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CategoryDialog(
-                                              category:
-                                                  Category(name: '', type: ''),
-                                            );
-                                          });
+                                      Navigator.of(context)
+                                          .pushNamed(RouteName.category);
                                     },
-                                    child: const Text('Add')),
+                                    child: const Text('Category Setting')),
                                 const SizedBox(height: 5)
                               ],
                             ),
@@ -410,7 +438,9 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                           const SizedBox(height: 10),
                           /* Date */
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              selectDate();
+                            },
                             child: Container(
                               padding: const EdgeInsets.all(15),
                               decoration: BoxDecoration(
@@ -420,15 +450,20 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Feb 20, 2023',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                  ),
+                                  Selector<CreateExpenseProvider, DateTime>(
+                                      selector: ((p0, p1) => p1.selectedDate),
+                                      builder: (context, date, child) {
+                                        return Text(
+                                          MyFormatters.dateFormatter
+                                              .format(date),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                        );
+                                      }),
                                   const Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                     color: MyColors.secondaryTxtColor,
@@ -581,5 +616,17 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
             ),
           )),
     );
+  }
+
+  void selectDate() async {
+    var createExpenseProvider =
+        Provider.of<CreateExpenseProvider>(context, listen: false);
+    var selectedDate = await showDatePicker(
+        context: context,
+        initialDate: createExpenseProvider.selectedDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime.now());
+    createExpenseProvider.setSelectedDate(
+        DateTime(selectedDate!.year, selectedDate.month, selectedDate.day));
   }
 }

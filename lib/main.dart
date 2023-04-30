@@ -1,5 +1,6 @@
-import 'package:expense_ledger/provider/provider_balance.dart';
+import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/provider/provider_calendar.dart';
+import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:expense_ledger/provider/provider_create_expense.dart';
 import 'package:expense_ledger/provider/provider_home.dart';
 import 'package:expense_ledger/route/routes.dart';
@@ -13,10 +14,12 @@ void main() {
     ChangeNotifierProvider<HomeProvider>(create: ((context) => HomeProvider())),
     ChangeNotifierProvider<CreateExpenseProvider>(
         create: ((context) => CreateExpenseProvider())),
-    ChangeNotifierProvider<BalanceProvider>(
-        create: ((context) => BalanceProvider())),
+    ChangeNotifierProvider<ExpenseProvider>(
+        create: ((context) => ExpenseProvider())),
     ChangeNotifierProvider<CalendarProvider>(
-        create: ((context) => CalendarProvider()))
+        create: ((context) => CalendarProvider())),
+    ChangeNotifierProvider<CategoryProvider>(
+        create: ((context) => CategoryProvider()))
   ], child: const MyApp()));
 }
 
@@ -25,7 +28,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<BalanceProvider>(context, listen: false).specifyExpense();
+    Provider.of<ExpenseProvider>(context, listen: false).fetchAllExpense();
+    Provider.of<ExpenseProvider>(context, listen: false).specifyExpense();
+    Provider.of<CategoryProvider>(context, listen: false).fetchCategoryList();
     print('rebuild');
     return MaterialApp(
       theme: CustomTheme.lightTheme,

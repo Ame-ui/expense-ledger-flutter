@@ -1,9 +1,6 @@
-import 'package:expense_ledger/model/expense.dart';
-import 'package:expense_ledger/provider/provider_balance.dart';
+import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/provider/provider_calendar.dart';
 import 'package:expense_ledger/value/colors.dart';
-import 'package:expense_ledger/value/formatters.dart';
-import 'package:expense_ledger/widget/balance_listtile.dart';
 import 'package:expense_ledger/widget/calendar_balance_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +11,7 @@ class CalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var balanceProvider = Provider.of<BalanceProvider>(context, listen: false);
+    var balanceProvider = Provider.of<ExpenseProvider>(context, listen: false);
     return Container(
       color: Colors.white,
       child: SafeArea(

@@ -58,7 +58,7 @@ class BalanceListTile extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
-                      ?.copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+                      ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
               /* total balance */
@@ -100,7 +100,7 @@ class BalanceListTile extends StatelessWidget {
                           expenseList[index].category.name,
                           style: Theme.of(context)
                               .textTheme
-                              .bodyLarge
+                              .bodyMedium
                               ?.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w500),
                         ),

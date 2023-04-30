@@ -1,5 +1,5 @@
 import 'package:expense_ledger/model/expense.dart';
-import 'package:expense_ledger/provider/provider_balance.dart';
+import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/widget/balance_listtile.dart';
 import 'package:flutter/material.dart';
@@ -248,19 +248,18 @@ class BalancePage extends StatelessWidget {
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                child: Selector<BalanceProvider, Map<DateTime, List<Expense>>>(
-                    selector: (p0, p1) => p1.expenseListByDate,
-                    builder: (context, expenseListByDate, child) {
-                      return ListView.builder(
-                          itemCount: expenseListByDate.length,
-                          itemBuilder: ((context, index) {
-                            return BalanceListTile(
-                                dateTime:
-                                    expenseListByDate.keys.elementAt(index),
-                                expenseList:
-                                    expenseListByDate.values.elementAt(index));
-                          }));
-                    }),
+                child: Consumer<ExpenseProvider>(
+                    builder: (context, provider, child) {
+                  return ListView.builder(
+                      itemCount: provider.expenseListByDate.length,
+                      itemBuilder: ((context, index) {
+                        return BalanceListTile(
+                            dateTime: provider.expenseListByDate.keys
+                                .elementAt(index),
+                            expenseList: provider.expenseListByDate.values
+                                .elementAt(index));
+                      }));
+                }),
               )),
             ],
           ),
