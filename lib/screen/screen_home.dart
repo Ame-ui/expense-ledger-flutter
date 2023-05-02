@@ -1,12 +1,13 @@
 import 'package:expense_ledger/provider/provider_home.dart';
-import 'package:expense_ledger/screen/home_pages/balance.dart';
-import 'package:expense_ledger/screen/home_pages/calendar.dart';
-import 'package:expense_ledger/screen/home_pages/setting.dart';
-import 'package:expense_ledger/screen/home_pages/statistics.dart';
+import 'package:expense_ledger/screen/home_pages/page_calendar.dart';
+import 'package:expense_ledger/screen/home_pages/page_statistics.dart';
 import 'package:expense_ledger/value/my_icons.dart';
 import 'package:expense_ledger/value/route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'home_pages/page_balance.dart';
+import 'home_pages/page_setting.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

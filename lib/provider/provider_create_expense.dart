@@ -2,6 +2,7 @@ import 'package:expense_ledger/model/category.dart';
 import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateExpenseProvider extends ChangeNotifier {
   bool isCustomKeyboardOpen = false;
@@ -39,7 +40,8 @@ class CreateExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   void setSelectedDate(DateTime newDate) {
     selectedDate = newDate;
     notifyListeners();

@@ -1,19 +1,22 @@
 import 'package:expense_ledger/model/category.dart';
+import 'package:uuid/uuid.dart';
 
 class Expense {
   Expense({
+    required this.id,
     required this.amount,
     required this.category,
     required this.dateTime,
     this.note,
   });
-
+  String id;
   int amount;
   Category category;
   DateTime dateTime;
   String? note;
 
   factory Expense.fromJson(Map<String, dynamic> json) => Expense(
+        id: json["id"],
         amount: json["amount"],
         category: Category.fromJson(json["category"]),
         dateTime: DateTime.parse(json["dateTime"]),
@@ -21,6 +24,7 @@ class Expense {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "amount": amount,
         "category": category.toJson(),
         "dateTime": dateTime.toIso8601String(),

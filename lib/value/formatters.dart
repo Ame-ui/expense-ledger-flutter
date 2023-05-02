@@ -4,8 +4,11 @@ import 'package:expense_ledger/model/expense.dart';
 import 'package:intl/intl.dart';
 
 class MyFormatters {
-  static DateFormat dateFormatter = DateFormat('MMM d, y');
+  static DateFormat dateFormatterMDY = DateFormat('MMM d, y');
+  static DateFormat dateFormatterMY = DateFormat('MMM y');
+  static DateFormat dateFormatterWeek = DateFormat('EEE');
   static NumberFormat numFormatter = NumberFormat('#,##0');
+
   //expense list json formatter
   static List<Expense> expenseListFromJson(String str) =>
       List<Expense>.from(json.decode(str).map((x) => Expense.fromJson(x)));

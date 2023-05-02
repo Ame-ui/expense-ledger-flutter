@@ -4,8 +4,8 @@ import 'package:expense_ledger/value/formatters.dart';
 import 'package:expense_ledger/widget/expense_listtile.dart';
 import 'package:flutter/material.dart';
 
-class CalandarCard extends StatelessWidget {
-  const CalandarCard(
+class CalandarDateCard extends StatelessWidget {
+  const CalandarDateCard(
       {super.key, required this.dateTime, required this.expenseList});
   /* required data */
   final DateTime dateTime;
@@ -47,7 +47,7 @@ class CalandarCard extends StatelessWidget {
             children: [
               /* Date */
               Text(
-                MyFormatters.dateFormatter.format(dateTime),
+                MyFormatters.dateFormatterMDY.format(dateTime),
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge

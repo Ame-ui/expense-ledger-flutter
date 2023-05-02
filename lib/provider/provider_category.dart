@@ -4,24 +4,25 @@ import 'package:expense_ledger/model/category.dart';
 import 'package:expense_ledger/value/formatters.dart';
 import 'package:expense_ledger/value/storage_keys.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryProvider extends ChangeNotifier {
   List<Category> categoryList = [];
-
+  var box = Hive.box<String>(StorageKeys.boxName);
   void fetchCategoryList() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String jsonStr = sharedPreferences.getString(StorageKeys.category) ?? '';
-    if (jsonStr.isEmpty) {
-      print('Json error');
-    } else {
-      categoryList = MyFormatters.categoryListFromJson(jsonStr);
-    }
+    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // String jsonStr = sharedPreferences.getString(StorageKeys.category) ?? '';
+
+    String jsonStr = box.get(StorageKeys.category) ?? '';
+    categoryList = MyFormatters.categoryListFromJson(jsonStr);
   }
 
   void storeInSharePrefenerce() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString(
+    // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    // sharedPreferences.setString(
+    //     StorageKeys.category, MyFormatters.categoryListToJson(categoryList));
+    box.put(
         StorageKeys.category, MyFormatters.categoryListToJson(categoryList));
   }
 
@@ -46,8 +47,8 @@ class CategoryProvider extends ChangeNotifier {
 
   int setInitSelectedValue() {
     if (categoryList.isNotEmpty) {
-      int selectedIndex = categoryList.indexOf(
-          categoryList.firstWhere((element) => element.type == 'income'));
+      int selectedIndex = categoryList.indexOf(categoryList.firstWhere(
+          (element) => element.type == 'income' || element.type == 'expense'));
       categoryList[selectedIndex].isSelected = true;
       return selectedIndex;
     } else {

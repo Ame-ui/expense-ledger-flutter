@@ -3,8 +3,8 @@ import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
 import 'package:flutter/material.dart';
 
-class BalanceListTile extends StatelessWidget {
-  BalanceListTile(
+class DateListTile extends StatelessWidget {
+  const DateListTile(
       {super.key, required this.dateTime, required this.expenseList});
   /* required data */
   final DateTime dateTime;
@@ -54,7 +54,7 @@ class BalanceListTile extends StatelessWidget {
               Flexible(
                 flex: 1,
                 child: Text(
-                  MyFormatters.dateFormatter.format(dateTime),
+                  MyFormatters.dateFormatterMDY.format(dateTime),
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge

@@ -1,13 +1,17 @@
 import 'package:expense_ledger/model/expense.dart';
+import 'package:expense_ledger/provider/provider_date_details.dart';
+import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseListTile extends StatelessWidget {
   const ExpenseListTile({super.key, required this.expense});
   final Expense expense;
   @override
   Widget build(BuildContext context) {
+    List<String> popupMenuItems = ['Bookmark', 'Edit', 'Delete'];
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 10, bottom: 10),
       child: Row(
@@ -74,12 +78,45 @@ class ExpenseListTile extends StatelessWidget {
                   ),
                 ),
                 /* More Button */
-                IconButton(
-                  onPressed: () {},
+                PopupMenuButton(
+                  color: MyColors.backgroundColor,
                   icon: const Icon(
-                    Icons.more_vert,
+                    Icons.more_vert_rounded,
+                    color: MyColors.greyColor,
                   ),
-                  color: MyColors.greyColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width / 3),
+                  itemBuilder: ((context) => popupMenuItems
+                      .map((e) => PopupMenuItem(
+                          value: e,
+                          child: Text(
+                            e,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          )))
+                      .toList()),
+                  onSelected: ((value) {
+                    var expenseProvider =
+                        Provider.of<ExpenseProvider>(context, listen: false);
+                    var dateDetailsProvider = Provider.of<DateDetailsProvider>(
+                        context,
+                        listen: false);
+                    switch (value) {
+                      case 'Bookmark':
+                        print(value);
+                        break;
+                      case 'Edit':
+                        print(value);
+                        break;
+                      case 'Delete':
+                        expenseProvider.deleteExpense(expense.id);
+                        dateDetailsProvider
+                            .deleteExpenseInExpenseList(expense.id);
+                        break;
+                      default:
+                    }
+                  }),
                 )
               ],
             ),

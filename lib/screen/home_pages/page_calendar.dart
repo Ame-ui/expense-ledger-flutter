@@ -1,7 +1,7 @@
 import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/provider/provider_calendar.dart';
 import 'package:expense_ledger/value/colors.dart';
-import 'package:expense_ledger/widget/calendar_balance_card.dart';
+import 'package:expense_ledger/widget/calendar_date_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -70,10 +70,10 @@ class CalendarPage extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Expanded(
-                  child: CalandarCard(
+                  child: CalandarDateCard(
                       dateTime: provider.focusedDay,
                       expenseList: balanceProvider
-                              .expenseListByDate[provider.focusedDay] ??
+                              .expenseListByAllDate[provider.focusedDay] ??
                           []))
             ]),
           );

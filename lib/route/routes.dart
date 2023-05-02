@@ -1,5 +1,7 @@
+import 'package:expense_ledger/model/expense.dart';
 import 'package:expense_ledger/screen/screen_catrgory.dart';
 import 'package:expense_ledger/screen/screen_create_expense.dart';
+import 'package:expense_ledger/screen/screen_details_date.dart';
 import 'package:expense_ledger/screen/screen_home.dart';
 import 'package:expense_ledger/screen/screen_splash.dart';
 import 'package:expense_ledger/value/route_names.dart';
@@ -25,6 +27,10 @@ class Routes {
       case RouteName.category:
         return MaterialPageRoute(
           builder: (context) => const CategoryScreen(),
+        );
+      case RouteName.dateDetails:
+        return MaterialPageRoute(
+          builder: (context) => const DateDetailsScreen(),
         );
       default:
         return MaterialPageRoute(

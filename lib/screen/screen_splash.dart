@@ -1,5 +1,6 @@
 import 'package:expense_ledger/value/route_names.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,6 +22,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.dark),
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(

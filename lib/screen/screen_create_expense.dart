@@ -9,6 +9,7 @@ import 'package:expense_ledger/value/route_names.dart';
 import 'package:expense_ledger/widget/category_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateExpenseScreen extends StatefulWidget {
   const CreateExpenseScreen({super.key});
@@ -34,8 +35,12 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
     previousCategoryIndex =
         Provider.of<CategoryProvider>(context, listen: false)
             .setInitSelectedValue();
-    selectedCategory = Provider.of<CategoryProvider>(context, listen: false)
-        .categoryList[previousCategoryIndex];
+    if (Provider.of<CategoryProvider>(context, listen: false)
+        .categoryList
+        .isNotEmpty) {
+      selectedCategory = Provider.of<CategoryProvider>(context, listen: false)
+          .categoryList[previousCategoryIndex];
+    }
     super.initState();
   }
 
@@ -72,7 +77,9 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     //new expense to add
+                    var uuid = Uuid();
                     Expense newExpense = Expense(
+                        id: uuid.v1(),
                         amount: int.parse(createExpenseProvider.amount),
                         category: selectedCategory,
                         dateTime: createExpenseProvider.selectedDate,
@@ -454,7 +461,7 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                       selector: ((p0, p1) => p1.selectedDate),
                                       builder: (context, date, child) {
                                         return Text(
-                                          MyFormatters.dateFormatter
+                                          MyFormatters.dateFormatterMDY
                                               .format(date),
                                           style: Theme.of(context)
                                               .textTheme
