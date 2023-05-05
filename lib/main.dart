@@ -2,8 +2,9 @@ import 'package:expense_ledger/provider/provider_date_details.dart';
 import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/provider/provider_calendar.dart';
 import 'package:expense_ledger/provider/provider_category.dart';
-import 'package:expense_ledger/provider/provider_create_expense.dart';
-import 'package:expense_ledger/provider/provider_home.dart';
+import 'package:expense_ledger/provider/provider_page_balance.dart';
+import 'package:expense_ledger/provider/provider_screen_create_expense.dart';
+import 'package:expense_ledger/provider/provider_screen_home.dart';
 import 'package:expense_ledger/route/routes.dart';
 import 'package:expense_ledger/theme/custom_theme.dart';
 import 'package:expense_ledger/value/route_names.dart';
@@ -20,6 +21,8 @@ void main() async {
     ChangeNotifierProvider<HomeProvider>(create: ((context) => HomeProvider())),
     ChangeNotifierProvider<CreateExpenseProvider>(
         create: ((context) => CreateExpenseProvider())),
+    ChangeNotifierProvider<BalancePageProvider>(
+        create: ((context) => BalancePageProvider())),
     ChangeNotifierProvider<ExpenseProvider>(
         create: ((context) => ExpenseProvider())),
     ChangeNotifierProvider<CalendarProvider>(
@@ -27,7 +30,7 @@ void main() async {
     ChangeNotifierProvider<CategoryProvider>(
         create: ((context) => CategoryProvider())),
     ChangeNotifierProvider<DateDetailsProvider>(
-        create: ((context) => DateDetailsProvider()))
+        create: ((context) => DateDetailsProvider())),
   ], child: const MyApp()));
 }
 
@@ -36,7 +39,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ExpenseProvider>(context, listen: false).fetchAllExpense();
+    Provider.of<ExpenseProvider>(context, listen: false)
+        .fetchAllExpense(context);
+    Provider.of<BalancePageProvider>(context, listen: false).checkListByView();
     Provider.of<CategoryProvider>(context, listen: false).fetchCategoryList();
     return MaterialApp(
       theme: CustomTheme.lightTheme,

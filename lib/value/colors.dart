@@ -2,7 +2,7 @@ import 'package:flutter/animation.dart';
 
 class MyColors {
   static const Color primaryColor = Color(0xff2371E5);
-  static const Color secondaryColor = Color(0xff1D5EBE);
+  static const Color secondaryColor = Color(0xff3784F6);
   static const Color primaryTxtColor = Color(0xff1B1B1B);
   static const Color secondaryTxtColor = Color(0xff3E3E3E);
   static const Color inactiveColor = Color(0xffB4B4B4);

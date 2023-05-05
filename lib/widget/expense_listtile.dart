@@ -110,7 +110,7 @@ class ExpenseListTile extends StatelessWidget {
                         print(value);
                         break;
                       case 'Delete':
-                        expenseProvider.deleteExpense(expense.id);
+                        expenseProvider.deleteExpense(context, expense.id);
                         dateDetailsProvider
                             .deleteExpenseInExpenseList(expense.id);
                         break;

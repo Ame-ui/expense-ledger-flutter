@@ -1,7 +1,7 @@
 import 'package:expense_ledger/model/category.dart';
 import 'package:expense_ledger/model/expense.dart';
 import 'package:expense_ledger/provider/provider_category.dart';
-import 'package:expense_ledger/provider/provider_create_expense.dart';
+import 'package:expense_ledger/provider/provider_screen_create_expense.dart';
 import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
@@ -77,7 +77,7 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     //new expense to add
-                    var uuid = Uuid();
+                    var uuid = const Uuid();
                     Expense newExpense = Expense(
                         id: uuid.v1(),
                         amount: int.parse(createExpenseProvider.amount),
@@ -85,7 +85,7 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                         dateTime: createExpenseProvider.selectedDate,
                         note: _noteTextController.text);
                     //adding new expense
-                    expenseProvider.addtoExpenseList(newExpense);
+                    expenseProvider.addtoExpenseList(context, newExpense);
                     Navigator.of(context).pop();
                     //reset all value
                     previousCategoryIndex = 0;

@@ -53,12 +53,25 @@ class DateListTile extends StatelessWidget {
               /* date */
               Flexible(
                 flex: 1,
-                child: Text(
-                  MyFormatters.dateFormatterMDY.format(dateTime),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      MyFormatters.dateFormatterMDY.format(dateTime),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    /* Weekday */
+                    Text(
+                      MyFormatters.dateFormatterWeek.format(dateTime),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
               ),
               /* total balance */

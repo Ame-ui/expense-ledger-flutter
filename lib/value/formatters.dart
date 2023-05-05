@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 class MyFormatters {
   static DateFormat dateFormatterMDY = DateFormat('MMM d, y');
   static DateFormat dateFormatterMY = DateFormat('MMM y');
-  static DateFormat dateFormatterWeek = DateFormat('EEE');
+  static DateFormat dateFormatterMD = DateFormat('MMM d');
+  static DateFormat dateFormatterY = DateFormat('y');
+  static DateFormat dateFormatterWeek = DateFormat('EEEE');
   static NumberFormat numFormatter = NumberFormat('#,##0');
 
   //expense list json formatter

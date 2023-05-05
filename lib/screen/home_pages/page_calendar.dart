@@ -1,5 +1,6 @@
 import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/provider/provider_calendar.dart';
+import 'package:expense_ledger/provider/provider_page_balance.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/widget/calendar_date_card.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ class CalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var balanceProvider = Provider.of<ExpenseProvider>(context, listen: false);
+    var balancePageProvider =
+        Provider.of<BalancePageProvider>(context, listen: false);
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -72,7 +74,7 @@ class CalendarPage extends StatelessWidget {
               Expanded(
                   child: CalandarDateCard(
                       dateTime: provider.focusedDay,
-                      expenseList: balanceProvider
+                      expenseList: balancePageProvider
                               .expenseListByAllDate[provider.focusedDay] ??
                           []))
             ]),
