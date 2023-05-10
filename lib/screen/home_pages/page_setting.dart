@@ -16,10 +16,26 @@ class SettingPage extends StatelessWidget {
             tileColor: Colors.white,
             leading: const Icon(
               Icons.category_rounded,
-              color: Color.fromARGB(255, 7, 7, 7),
+              color: MyColors.greyColor,
             ),
             title: Text(
               'Category',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+          const SizedBox(height: 10),
+          ListTile(
+            onTap: () => Navigator.of(context).pushNamed(RouteName.bookmark),
+            tileColor: Colors.white,
+            leading: const Icon(
+              Icons.bookmark_rounded,
+              color: MyColors.greyColor,
+            ),
+            title: Text(
+              'Bookmarks',
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge

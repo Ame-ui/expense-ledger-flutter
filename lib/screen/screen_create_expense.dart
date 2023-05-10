@@ -3,17 +3,19 @@ import 'package:expense_ledger/model/expense.dart';
 import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:expense_ledger/provider/provider_screen_create_expense.dart';
 import 'package:expense_ledger/provider/provider_expense.dart';
+import 'package:expense_ledger/provider/provider_screen_expense_details.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
 import 'package:expense_ledger/value/route_names.dart';
 import 'package:expense_ledger/widget/category_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateExpenseScreen extends StatefulWidget {
-  const CreateExpenseScreen({super.key});
-
+  const CreateExpenseScreen({super.key, required this.isNew});
+  final bool isNew;
   @override
   State<CreateExpenseScreen> createState() => _CreateExpenseScreenState();
 }
@@ -31,15 +33,49 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
 
   @override
   void initState() {
-    // select fist income category
-    previousCategoryIndex =
-        Provider.of<CategoryProvider>(context, listen: false)
-            .setInitSelectedValue();
-    if (Provider.of<CategoryProvider>(context, listen: false)
-        .categoryList
-        .isNotEmpty) {
-      selectedCategory = Provider.of<CategoryProvider>(context, listen: false)
-          .categoryList[previousCategoryIndex];
+    var categoryProvider =
+        Provider.of<CategoryProvider>(context, listen: false);
+    previousCategoryIndex = categoryProvider.setInitSelectedValue();
+    if (widget.isNew) {
+      // select fist income category
+      if (categoryProvider.categoryList.isNotEmpty) {
+        selectedCategory = categoryProvider.categoryList[previousCategoryIndex];
+      }
+    } else
+    //edit
+    {
+      var expenseDetailsProvider =
+          Provider.of<ExpenseDetailsProvider>(context, listen: false);
+      var createExpenseProvider =
+          Provider.of<CreateExpenseProvider>(context, listen: false);
+      //category
+      selectedCategory = expenseDetailsProvider.selectedExpense.category;
+      // categoryProvider.categoryList
+      //     .firstWhere((element) =>
+      //         element.name ==
+      //         expenseDetailsProvider.selectedExpense.category.name)
+      //     .isSelected = true;
+      int newIndex = categoryProvider.categoryList.indexOf(
+          categoryProvider.categoryList.firstWhere((element) =>
+              element.name ==
+                  expenseDetailsProvider.selectedExpense.category.name &&
+              element.type ==
+                  expenseDetailsProvider.selectedExpense.category.type));
+      print(newIndex);
+      print(previousCategoryIndex);
+      categoryProvider.categoryList[previousCategoryIndex].isSelected = false;
+      categoryProvider.categoryList[newIndex].isSelected = true;
+      previousCategoryIndex = newIndex;
+
+      //amount
+      createExpenseProvider.amount =
+          expenseDetailsProvider.selectedExpense.amount.toString();
+      //note
+      _noteTextController.text =
+          expenseDetailsProvider.selectedExpense.note ?? '';
+      //date
+      createExpenseProvider.selectedDate =
+          expenseDetailsProvider.selectedExpense.dateTime;
     }
     super.initState();
   }
@@ -62,9 +98,13 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.white,
+                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: Brightness.dark),
             /* if it is create=>New or edit=>Edit */
             title: Text(
-              'New',
+              widget.isNew ? 'New' : 'Edit',
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
@@ -76,22 +116,59 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    //new expense to add
-                    var uuid = const Uuid();
-                    Expense newExpense = Expense(
-                        id: uuid.v1(),
-                        amount: int.parse(createExpenseProvider.amount),
-                        category: selectedCategory,
-                        dateTime: createExpenseProvider.selectedDate,
-                        note: _noteTextController.text);
-                    //adding new expense
-                    expenseProvider.addtoExpenseList(context, newExpense);
-                    Navigator.of(context).pop();
-                    //reset all value
-                    previousCategoryIndex = 0;
-                    selectedCategory = Category(name: '', type: '');
+                    createExpenseProvider.checkAmount();
+                    print(createExpenseProvider.isAmountEmpty);
+                    if (!createExpenseProvider.isAmountEmpty) {
+                      if (widget.isNew) {
+                        //new expense to add
+                        var uuid = const Uuid();
+                        Expense newExpense = Expense(
+                            id: uuid.v1(),
+                            amount: int.parse(createExpenseProvider.amount),
+                            category: selectedCategory,
+                            dateTime: createExpenseProvider.selectedDate,
+                            note: _noteTextController.text,
+                            bookmarked: false);
+                        //adding new expense
+                        expenseProvider.addtoExpenseList(context, newExpense);
+                        Navigator.of(context).pop();
+                      } else {
+                        var expenseDetailsProvider =
+                            Provider.of<ExpenseDetailsProvider>(context,
+                                listen: false);
+                        var editedExpense = Expense(
+                            id: expenseDetailsProvider.selectedExpense.id,
+                            amount: int.parse(createExpenseProvider.amount),
+                            category: selectedCategory,
+                            dateTime: createExpenseProvider.selectedDate,
+                            note: _noteTextController.text,
+                            bookmarked: expenseDetailsProvider
+                                .selectedExpense.bookmarked);
+                        expenseProvider.editExpense(
+                            context,
+                            expenseDetailsProvider.selectedExpense.id,
+                            editedExpense);
+                        expenseDetailsProvider
+                            .setSelectedExpense(editedExpense);
+                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                            .popAndPushNamed(RouteName.expenseDetails);
+                      }
+                      //reset all value
+                      previousCategoryIndex = 0;
+                      selectedCategory = Category(name: '', type: '');
 
-                    createExpenseProvider.resetValues(context);
+                      createExpenseProvider.resetValues(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          'Amount can\'t be empty or zero',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        backgroundColor: MyColors.redColor,
+                        duration: const Duration(seconds: 2),
+                      ));
+                    }
                   },
                   child: Text(
                     "Save",
@@ -322,53 +399,53 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                           .changeKeyboardState(true);
                                     }));
                                   },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 15),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: MyColors.textFieldColor),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Flexible(
-                                          flex: 5,
-                                          child: Selector<CreateExpenseProvider,
-                                                  String>(
-                                              builder:
-                                                  ((context, amount, child) {
-                                                return Text(
-                                                  amount,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
-                                                          fontSize: 22,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                );
-                                              }),
-                                              selector: ((p0, p1) =>
-                                                  p1.amount)),
-                                        ),
-                                        Flexible(
-                                          flex: 1,
-                                          child: Text(
-                                            'MMK',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.copyWith(
-                                                    fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                  child: Consumer<CreateExpenseProvider>(
+                                      builder: (context, provider, child) {
+                                    return Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 15),
+                                      decoration: BoxDecoration(
+                                          border: provider.isAmountEmpty
+                                              ? Border.all(color: Colors.red)
+                                              : null,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: MyColors.textFieldColor),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            flex: 5,
+                                            child: Text(
+                                              provider.amount,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      fontSize: 22,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            ),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                          Flexible(
+                                            flex: 1,
+                                            child: Text(
+                                              'MMK',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }),
                                 ),
                                 const SizedBox(height: 10),
                                 /* Add Note */

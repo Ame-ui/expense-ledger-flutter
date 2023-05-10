@@ -1,5 +1,5 @@
 import 'package:expense_ledger/model/expense.dart';
-import 'package:expense_ledger/provider/provider_date_details.dart';
+import 'package:expense_ledger/provider/provider_screen_date_details.dart';
 import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
@@ -170,7 +170,9 @@ class DateDetailsScreen extends StatelessWidget {
                   itemCount: provider.selectedDateDetails.value.length,
                   itemBuilder: ((context, index) {
                     return ExpenseListTile(
-                        expense: provider.selectedDateDetails.value[index]);
+                      expense: provider.selectedDateDetails.value[index],
+                      dateInclude: false,
+                    );
                   })),
             )),
           ],

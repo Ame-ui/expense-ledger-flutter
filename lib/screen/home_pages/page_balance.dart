@@ -62,103 +62,124 @@ class BalancePage extends StatelessWidget {
                                   //     horizontal: 10),
                                   decoration: BoxDecoration(
                                     color: MyColors.secondaryColor,
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(30),
                                   ),
-                                  child: Visibility(
-                                    visible: provider.viewBy != 'All',
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            provider.setDate(false);
-                                          },
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_left_rounded,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        provider.viewBy == 'Weekly'
-                                            ? Row(
-                                                children: [
-                                                  Text(
-                                                    MyFormatters.dateFormatterMD
-                                                        .format(provider
-                                                            .weekStartDate),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleLarge
-                                                        ?.copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                  ),
-                                                  Text(
-                                                    ' - ',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleLarge
-                                                        ?.copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                  ),
-                                                  Text(
-                                                    MyFormatters.dateFormatterMD
-                                                        .format(provider
-                                                            .weekEndDate),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleLarge
-                                                        ?.copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400),
-                                                  ),
-                                                ],
-                                              )
-                                            : Text(
-                                                provider.viewBy == 'Daily'
-                                                    ? MyFormatters
-                                                        .dateFormatterMDY
-                                                        .format(provider
-                                                            .selectedDatetTime)
-                                                    : provider.viewBy ==
-                                                            'Monthly'
-                                                        ? MyFormatters
-                                                            .dateFormatterMY
-                                                            .format(provider
-                                                                .selectedDatetTime)
-                                                        : MyFormatters
-                                                            .dateFormatterY
-                                                            .format(provider
-                                                                .selectedDatetTime),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge
-                                                    ?.copyWith(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                              ),
-                                        IconButton(
-                                          onPressed: () {
-                                            provider.setDate(true);
-                                          },
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_right_rounded,
-                                            color: Colors.white,
+                                  child: provider.viewBy == 'All'
+                                      ? Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 20),
+                                          child: Text(
+                                            'All Expense',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge
+                                                ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w400),
                                           ),
                                         )
-                                      ],
-                                    ),
-                                  ),
+                                      : Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                provider.setDate(false);
+                                              },
+                                              icon: const Icon(
+                                                Icons
+                                                    .keyboard_arrow_left_rounded,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            provider.viewBy == 'Weekly'
+                                                ? Row(
+                                                    children: [
+                                                      Text(
+                                                        MyFormatters
+                                                            .dateFormatterMD
+                                                            .format(provider
+                                                                .weekStartDate),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleLarge
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                      ),
+                                                      Text(
+                                                        ' - ',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleLarge
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                      ),
+                                                      Text(
+                                                        MyFormatters
+                                                            .dateFormatterMD
+                                                            .format(provider
+                                                                .weekEndDate),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleLarge
+                                                            ?.copyWith(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Text(
+                                                    provider.viewBy == 'Daily'
+                                                        ? MyFormatters
+                                                            .dateFormatterMDY
+                                                            .format(provider
+                                                                .selectedDatetTime)
+                                                        : provider.viewBy ==
+                                                                'Monthly'
+                                                            ? MyFormatters
+                                                                .dateFormatterMY
+                                                                .format(provider
+                                                                    .selectedDatetTime)
+                                                            : MyFormatters
+                                                                .dateFormatterY
+                                                                .format(provider
+                                                                    .selectedDatetTime),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleLarge
+                                                        ?.copyWith(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400),
+                                                  ),
+                                            IconButton(
+                                              onPressed: () {
+                                                provider.setDate(true);
+                                              },
+                                              icon: const Icon(
+                                                Icons
+                                                    .keyboard_arrow_right_rounded,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                 ),
                                 /* Type */
 
@@ -220,7 +241,7 @@ class BalancePage extends StatelessWidget {
                                     .textTheme
                                     .titleLarge
                                     ?.copyWith(
-                                        fontSize: 26,
+                                        fontSize: 28,
                                         fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -363,29 +384,82 @@ class BalancePage extends StatelessWidget {
               ),
               /* list of expense with date */
               Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-                child: ListView.builder(
-                    itemCount: provider.expenseListForUi.length,
-                    itemBuilder: ((context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Provider.of<DateDetailsProvider>(context,
-                                  listen: false)
-                              .setSelectedDateDetails(provider
-                                  .expenseListForUi.entries
-                                  .elementAt(index));
-                          Navigator.of(context)
-                              .pushNamed(RouteName.dateDetails);
-                        },
-                        child: DateListTile(
-                            dateTime:
-                                provider.expenseListForUi.keys.elementAt(index),
-                            expenseList: provider.expenseListForUi.values
-                                .elementAt(index)),
-                      );
-                    })),
-              )),
+                  child: provider.expenseListForUi.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/empty_img.png',
+                                width: MediaQuery.of(context).size.width / 2,
+                                height: MediaQuery.of(context).size.width / 2,
+                              ),
+                              // Text(
+                              //   'Empty List',
+                              //   style: Theme.of(context)
+                              //       .textTheme
+                              //       .bodyLarge
+                              //       ?.copyWith(
+                              //           fontSize: 22,
+                              //           fontWeight: FontWeight.bold),
+                              // ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'There is no record of income or expense',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'Press + to add',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                              const SizedBox(height: 30)
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                              top: 5, left: 10, right: 10),
+                          child: ListView.builder(
+                              itemCount: provider.expenseListForUi.length,
+                              itemBuilder: ((context, index) {
+                                return provider.expenseListForUi.values
+                                        .elementAt(index)
+                                        .isEmpty
+                                    ? const SizedBox.shrink()
+                                    : InkWell(
+                                        onTap: () {
+                                          Provider.of<DateDetailsProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .setSelectedDateDetails(provider
+                                                  .expenseListForUi.entries
+                                                  .elementAt(index));
+                                          Navigator.of(context)
+                                              .pushNamed(RouteName.dateDetails);
+                                        },
+                                        child: DateListTile(
+                                            dateTime: provider
+                                                .expenseListForUi.keys
+                                                .elementAt(index),
+                                            expenseList: provider
+                                                .expenseListForUi.values
+                                                .elementAt(index)),
+                                      );
+                              })),
+                        )),
             ],
           );
         }),

@@ -28,6 +28,23 @@ class CreateExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isAmountEmpty = false;
+  void checkAmount() {
+    if (amount.isEmpty || int.parse(amount) == 0) {
+      isAmountEmpty = true;
+      notifyListeners();
+    } else {
+      isAmountEmpty = false;
+    }
+  }
+
+  DateTime selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  void setSelectedDate(DateTime newDate) {
+    selectedDate = newDate;
+    notifyListeners();
+  }
+
   void resetValues(BuildContext context) {
     isCustomKeyboardOpen = false;
     isNoteOpen = false;
@@ -37,13 +54,10 @@ class CreateExpenseProvider extends ChangeNotifier {
     for (var element in categoryProvider.categoryList) {
       element.isSelected = false;
     }
-    notifyListeners();
-  }
+    setSelectedDate(DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day));
 
-  DateTime selectedDate =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  void setSelectedDate(DateTime newDate) {
-    selectedDate = newDate;
+    isAmountEmpty = false;
     notifyListeners();
   }
 }

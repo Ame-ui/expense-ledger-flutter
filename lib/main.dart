@@ -1,9 +1,11 @@
-import 'package:expense_ledger/provider/provider_date_details.dart';
+import 'package:expense_ledger/provider/provider_bookmark.dart';
+import 'package:expense_ledger/provider/provider_screen_date_details.dart';
 import 'package:expense_ledger/provider/provider_expense.dart';
-import 'package:expense_ledger/provider/provider_calendar.dart';
+import 'package:expense_ledger/provider/provider_page_calendar.dart';
 import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:expense_ledger/provider/provider_page_balance.dart';
 import 'package:expense_ledger/provider/provider_screen_create_expense.dart';
+import 'package:expense_ledger/provider/provider_screen_expense_details.dart';
 import 'package:expense_ledger/provider/provider_screen_home.dart';
 import 'package:expense_ledger/route/routes.dart';
 import 'package:expense_ledger/theme/custom_theme.dart';
@@ -31,6 +33,10 @@ void main() async {
         create: ((context) => CategoryProvider())),
     ChangeNotifierProvider<DateDetailsProvider>(
         create: ((context) => DateDetailsProvider())),
+    ChangeNotifierProvider<ExpenseDetailsProvider>(
+        create: ((context) => ExpenseDetailsProvider())),
+    ChangeNotifierProvider<BookMarkProvider>(
+        create: ((context) => BookMarkProvider())),
   ], child: const MyApp()));
 }
 

@@ -18,7 +18,7 @@ class CategoryProvider extends ChangeNotifier {
     categoryList = MyFormatters.categoryListFromJson(jsonStr);
   }
 
-  void storeInSharePrefenerce() async {
+  void storeInDb() async {
     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     // sharedPreferences.setString(
     //     StorageKeys.category, MyFormatters.categoryListToJson(categoryList));
@@ -29,24 +29,28 @@ class CategoryProvider extends ChangeNotifier {
   void addToCategoryList(Category newCategory) {
     categoryList.insert(0, newCategory);
     notifyListeners();
-    storeInSharePrefenerce();
+    storeInDb();
   }
 
   void editCategoryList(Category newCategory, Category oldCategory) {
     categoryList.insert(categoryList.indexOf(oldCategory), newCategory);
     categoryList.remove(oldCategory);
     notifyListeners();
-    storeInSharePrefenerce();
+    storeInDb();
   }
 
   void removeFromCategoryList(Category category) {
     categoryList.remove(category);
     notifyListeners();
-    storeInSharePrefenerce();
+    storeInDb();
   }
 
+  // following methods are for create expense screen
   int setInitSelectedValue() {
     if (categoryList.isNotEmpty) {
+      categoryList.forEach((element) {
+        element.isSelected = false;
+      });
       int selectedIndex = categoryList.indexOf(categoryList.firstWhere(
           (element) => element.type == 'income' || element.type == 'expense'));
       categoryList[selectedIndex].isSelected = true;

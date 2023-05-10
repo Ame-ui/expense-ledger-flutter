@@ -155,7 +155,10 @@ class CalandarDateCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     itemCount: expenseList.length,
                     itemBuilder: ((context, index) {
-                      return ExpenseListTile(expense: expenseList[index]);
+                      return ExpenseListTile(
+                        expense: expenseList[index],
+                        dateInclude: false,
+                      );
                     })),
           ),
         ],

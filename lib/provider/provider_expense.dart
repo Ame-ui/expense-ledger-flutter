@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:expense_ledger/model/expense.dart';
+import 'package:expense_ledger/provider/provider_bookmark.dart';
 import 'package:expense_ledger/provider/provider_page_balance.dart';
 import 'package:expense_ledger/value/formatters.dart';
 import 'package:expense_ledger/value/storage_keys.dart';
@@ -22,40 +23,44 @@ class ExpenseProvider extends ChangeNotifier {
         .specifyExpense(allExpenseList);
   }
 
-  void storeExpenseToDb() async {
-    box.put(
-        StorageKeys.expense, MyFormatters.expenseListToJson(allExpenseList));
-  }
-
   void addtoExpenseList(BuildContext context, Expense newExpense) {
-    allExpenseList.insert(0, newExpense);
-    var balanceProvider =
-        Provider.of<BalancePageProvider>(context, listen: false);
+    allExpenseList.add(newExpense);
 
-    balanceProvider.specifyExpense(allExpenseList);
-    balanceProvider.checkListByView();
-    balanceProvider.notifyListeners();
-    storeExpenseToDb();
+    checkAndStoreToDb(context);
   }
 
   void editExpense(BuildContext context, String id, Expense expense) {
     allExpenseList[allExpenseList.indexOf(
-        allExpenseList.where((element) => element.id == id).first)] = expense;
-    var balanceProvider =
-        Provider.of<BalancePageProvider>(context, listen: false);
-    balanceProvider.specifyExpense(allExpenseList);
-    balanceProvider.notifyListeners();
-    balanceProvider.checkListByView();
-    storeExpenseToDb();
+        allExpenseList.firstWhere((element) => element.id == id))] = expense;
+
+    checkAndStoreToDb(context);
   }
 
   void deleteExpense(BuildContext context, String id) {
     allExpenseList.removeWhere((element) => element.id == id);
+    checkAndStoreToDb(context);
+  }
+
+  void toggleBookmark(BuildContext context, Expense expense) {
+    allExpenseList
+        .singleWhere((element) => element.id == expense.id)
+        .bookmarked = expense.bookmarked;
+
+    checkAndStoreToDb(context);
+    //to update bookmark screen
+    Provider.of<BookMarkProvider>(context, listen: false).notifyListeners();
+  }
+
+  void checkAndStoreToDb(BuildContext context) async {
     var balanceProvider =
         Provider.of<BalancePageProvider>(context, listen: false);
     balanceProvider.specifyExpense(allExpenseList);
     balanceProvider.checkListByView();
     balanceProvider.notifyListeners();
-    storeExpenseToDb();
+    Provider.of<BookMarkProvider>(context, listen: false)
+        .checkBookmark(allExpenseList);
+
+    box.put(
+        StorageKeys.expense, MyFormatters.expenseListToJson(allExpenseList));
   }
 }

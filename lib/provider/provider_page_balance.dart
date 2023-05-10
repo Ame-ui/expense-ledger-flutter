@@ -62,6 +62,15 @@ class BalancePageProvider extends ChangeNotifier {
         });
         break;
     }
+    //to delete if value in key are empty
+    Map<DateTime, List<Expense>> removeList = {};
+    expenseListForUi.forEach((key, value) {
+      if (value.isEmpty) {
+        removeList[key] = value;
+      }
+    });
+    expenseListForUi.removeWhere((key, value) => removeList.containsKey(key));
+    print(expenseListForUi);
     totalBalance = 0;
     totalIncome = 0;
     totalExpense = 0;
@@ -157,9 +166,12 @@ class BalancePageProvider extends ChangeNotifier {
         expenseListByAllDate[element.dateTime] = [element];
       }
     }
-    expenseListByAllDate = Map.fromEntries(expenseListByAllDate.entries.toList()
-      ..sort(
-        (a, b) => b.key.compareTo(a.key),
-      ));
+    if (expenseListByAllDate.isNotEmpty) {
+      expenseListByAllDate =
+          Map.fromEntries(expenseListByAllDate.entries.toList()
+            ..sort(
+              (a, b) => b.key.compareTo(a.key),
+            ));
+    }
   }
 }

@@ -1,7 +1,9 @@
 import 'package:expense_ledger/model/expense.dart';
+import 'package:expense_ledger/screen/screen_bookmark.dart';
 import 'package:expense_ledger/screen/screen_catrgory.dart';
 import 'package:expense_ledger/screen/screen_create_expense.dart';
 import 'package:expense_ledger/screen/screen_details_date.dart';
+import 'package:expense_ledger/screen/screen_details_expense.dart';
 import 'package:expense_ledger/screen/screen_home.dart';
 import 'package:expense_ledger/screen/screen_splash.dart';
 import 'package:expense_ledger/value/route_names.dart';
@@ -22,7 +24,9 @@ class Routes {
         );
       case RouteName.createExpense:
         return MaterialPageRoute(
-          builder: (context) => const CreateExpenseScreen(),
+          builder: (context) => CreateExpenseScreen(
+            isNew: settings.arguments as bool,
+          ),
         );
       case RouteName.category:
         return MaterialPageRoute(
@@ -31,6 +35,14 @@ class Routes {
       case RouteName.dateDetails:
         return MaterialPageRoute(
           builder: (context) => const DateDetailsScreen(),
+        );
+      case RouteName.expenseDetails:
+        return MaterialPageRoute(
+          builder: (context) => const ExpenseDetailsScreen(),
+        );
+      case RouteName.bookmark:
+        return MaterialPageRoute(
+          builder: (context) => const BookmarkScreen(),
         );
       default:
         return MaterialPageRoute(
