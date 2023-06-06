@@ -21,7 +21,7 @@ class DateListTile extends StatelessWidget {
     int otherExpense = 0;
     /* Calculate totalIncome, totalExpense, and TotalOther */
     for (int i = 0; i < expenseList.length; i++) {
-      if (expenseList[i].category.type == 'income') {
+      if (expenseList[i].category.type == 'Income') {
         totalIncome += expenseList[i].amount;
         /* if item count >3 then amount of rest expense will also add to totalOther */
         if (i > 2) {
@@ -119,7 +119,7 @@ class DateListTile extends StatelessWidget {
                         ),
                         /* Amount */
                         Text(
-                          (expenseList[index].category.type == 'expense'
+                          (expenseList[index].category.type == 'Expense'
                                   ? '-'
                                   : '+') +
                               (MyFormatters.numFormatter
@@ -129,7 +129,7 @@ class DateListTile extends StatelessWidget {
                               .bodyLarge
                               ?.copyWith(
                                   color: expenseList[index].category.type ==
-                                          'expense'
+                                          'Expense'
                                       ? MyColors.redColor
                                       : MyColors.greenColor,
                                   fontSize: 14,

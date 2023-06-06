@@ -32,15 +32,47 @@ class BookmarkScreen extends StatelessWidget {
             color: Colors.white,
             child:
                 Consumer<BookMarkProvider>(builder: (context, provider, child) {
-              return ListView.separated(
-                  itemCount: provider.bookmarkedList.length,
-                  separatorBuilder: ((context, index) => const Divider()),
-                  itemBuilder: ((context, index) {
-                    return ExpenseListTile(
-                      expense: provider.bookmarkedList[index],
-                      dateInclude: true,
-                    );
-                  }));
+              return provider.bookmarkedList.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/empty_bookmark.png',
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.width / 2,
+                          ),
+                          Text(
+                            'Empty List',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            'There is no bookmarked record',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontSize: 14,
+                                ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: provider.bookmarkedList.length,
+                      separatorBuilder: ((context, index) => const Divider()),
+                      itemBuilder: ((context, index) {
+                        return ExpenseListTile(
+                          expense: provider.bookmarkedList[index],
+                          dateInclude: true,
+                        );
+                      }));
             }),
           ))
         ],

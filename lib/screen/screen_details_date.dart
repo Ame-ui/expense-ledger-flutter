@@ -1,6 +1,4 @@
-import 'package:expense_ledger/model/expense.dart';
 import 'package:expense_ledger/provider/provider_screen_date_details.dart';
-import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/value/formatters.dart';
 import 'package:expense_ledger/widget/expense_listtile.dart';
@@ -21,7 +19,7 @@ class DateDetailsScreen extends StatelessWidget {
       int expenseCount = 0;
       /* Calculate totalIncome, totalExpense, and TotalOther */
       for (int i = 0; i < provider.selectedDateDetails.value.length; i++) {
-        if (provider.selectedDateDetails.value[i].category.type == 'income') {
+        if (provider.selectedDateDetails.value[i].category.type == 'Income') {
           totalIncome += provider.selectedDateDetails.value[i].amount;
           incomeCount++;
         } else {

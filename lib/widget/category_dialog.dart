@@ -1,5 +1,6 @@
 import 'package:expense_ledger/model/category.dart';
 import 'package:expense_ledger/provider/provider_category.dart';
+import 'package:expense_ledger/provider/provider_expense.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,8 @@ class CategoryDialog extends StatefulWidget {
 
 class _CategoryDialogState extends State<CategoryDialog> {
   final TextEditingController _nameTextController = TextEditingController();
-  String selectedType = 'income';
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String selectedType = 'Income';
   bool isNew = false;
   @override
   void dispose() {
@@ -52,18 +54,51 @@ class _CategoryDialogState extends State<CategoryDialog> {
                   .textTheme
                   .bodySmall
                   ?.copyWith(fontSize: 14)),
-          TextFormField(
-            onTap: () {},
-            controller: _nameTextController,
-            style: Theme.of(context).textTheme.bodyMedium,
-            decoration: InputDecoration(
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              fillColor: MyColors.textFieldColor,
-              filled: true,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(10),
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              // onTap: () {},
+              autofocus: true,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Name can\'t be empty';
+                } else {
+                  var categoryProvider =
+                      Provider.of<CategoryProvider>(context, listen: false);
+                  bool isAlreadyExist = false;
+                  for (var element in categoryProvider.categoryList) {
+                    if (element.name == _nameTextController.text &&
+                        element.type == selectedType) {
+                      isAlreadyExist = true;
+                      break;
+                    }
+                  }
+                  if (isAlreadyExist) {
+                    return 'Category already exist';
+                  } else {
+                    return null;
+                  }
+                }
+              },
+              controller: _nameTextController,
+              style: Theme.of(context).textTheme.bodyMedium,
+              decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                fillColor: MyColors.textFieldColor,
+                filled: true,
+                errorStyle: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.red, fontSize: 14),
+                errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           ),
@@ -78,7 +113,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
               Row(
                 children: [
                   Radio(
-                      value: 'income',
+                      value: 'Income',
                       groupValue: selectedType,
                       onChanged: ((value) => setState(() {
                             selectedType = value as String;
@@ -86,7 +121,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                   TextButton(
                       onPressed: (() {
                         setState(() {
-                          selectedType = 'income';
+                          selectedType = 'Income';
                         });
                       }),
                       child: Text('Income',
@@ -96,7 +131,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
               Row(
                 children: [
                   Radio(
-                      value: 'expense',
+                      value: 'Expense',
                       groupValue: selectedType,
                       onChanged: ((value) => setState(() {
                             selectedType = value as String;
@@ -104,7 +139,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
                   TextButton(
                       onPressed: (() {
                         setState(() {
-                          selectedType = 'expense';
+                          selectedType = 'Expense';
                         });
                       }),
                       child: Text('Expense',
@@ -123,15 +158,39 @@ class _CategoryDialogState extends State<CategoryDialog> {
           onPressed: () {
             var categoryProvider =
                 Provider.of<CategoryProvider>(context, listen: false);
-            if (isNew) {
-              categoryProvider.addToCategoryList(
-                  Category(name: _nameTextController.text, type: selectedType));
-            } else {
-              categoryProvider.editCategoryList(
-                  Category(name: _nameTextController.text, type: selectedType),
-                  widget.category);
+            if (_formKey.currentState!.validate()) {
+              if (isNew) {
+                categoryProvider.addToCategoryList(Category(
+                    name: _nameTextController.text, type: selectedType));
+              } else {
+                var editedCategory = Category(
+                    name: _nameTextController.text, type: selectedType);
+                categoryProvider.editCategoryList(
+                    editedCategory, widget.category);
+                //to update all expense with old category
+                var expenseProvider =
+                    Provider.of<ExpenseProvider>(context, listen: false);
+                for (var element in expenseProvider.allExpenseList) {
+                  print(widget.category.name);
+                  print(widget.category.type);
+                  print(element.category.name);
+                  print(element.category.type);
+                  if (element.category == widget.category) {
+                    print('true');
+                    expenseProvider
+                        .allExpenseList[
+                            expenseProvider.allExpenseList.indexOf(element)]
+                        .category = editedCategory;
+                  }
+                }
+                expenseProvider.checkAndStoreToDb(context);
+                // print(editedCategory.name);
+                // print(editedCategory.type);
+                // print(expenseProvider.allExpenseList[0].category.name);
+                // print(expenseProvider.allExpenseList[0].category.type);
+              }
+              Navigator.of(context).pop();
             }
-            Navigator.of(context).pop();
           },
           child: Text(
             "Save",

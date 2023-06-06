@@ -1,3 +1,4 @@
+import 'package:expense_ledger/model/chart_data.dart';
 import 'package:expense_ledger/model/expense.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -70,7 +71,7 @@ class BalancePageProvider extends ChangeNotifier {
       }
     });
     expenseListForUi.removeWhere((key, value) => removeList.containsKey(key));
-    print(expenseListForUi);
+    //to calculat totals
     totalBalance = 0;
     totalIncome = 0;
     totalExpense = 0;
@@ -78,7 +79,7 @@ class BalancePageProvider extends ChangeNotifier {
     expenseCount = 0;
     expenseListForUi.forEach((key, value) {
       for (var element in value) {
-        if (element.category.type == 'income') {
+        if (element.category.type == 'Income') {
           totalIncome += element.amount;
           incomeCount++;
         } else {
@@ -88,6 +89,9 @@ class BalancePageProvider extends ChangeNotifier {
       }
     });
     totalBalance = totalIncome - totalExpense;
+
+    //for statistic page
+    checkChartColumn();
   }
 
   void setViewBy(String value) {
@@ -172,6 +176,19 @@ class BalancePageProvider extends ChangeNotifier {
             ..sort(
               (a, b) => b.key.compareTo(a.key),
             ));
+    }
+  }
+
+  List<ChartData> allColumn = [];
+  dynamic checkChartColumn() {
+    allColumn.clear();
+    for (var key in expenseListForUi.keys) {
+      var list = expenseListForUi[key];
+      int totalValue = 0;
+      for (var value in list!) {
+        totalValue += value.amount;
+      }
+      allColumn.add(ChartData(x: key, y: totalValue));
     }
   }
 }

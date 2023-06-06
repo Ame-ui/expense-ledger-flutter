@@ -8,14 +8,26 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryProvider extends ChangeNotifier {
-  List<Category> categoryList = [];
+  List<Category> categoryList = [
+    Category(name: 'Cash', type: 'Income'),
+    Category(name: 'Salary', type: 'Income'),
+    Category(name: 'Comission', type: 'Income'),
+    Category(name: 'Breakfast', type: 'Expense'),
+    Category(name: 'Lunch', type: 'Expense'),
+    Category(name: 'Dinner', type: 'Expense'),
+    Category(name: 'Transportation', type: 'Expense'),
+    Category(name: 'Medication', type: 'Expense'),
+    Category(name: 'Repair', type: 'Expense')
+  ];
   var box = Hive.box<String>(StorageKeys.boxName);
   void fetchCategoryList() async {
     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     // String jsonStr = sharedPreferences.getString(StorageKeys.category) ?? '';
 
     String jsonStr = box.get(StorageKeys.category) ?? '';
-    categoryList = MyFormatters.categoryListFromJson(jsonStr);
+    if (jsonStr.isNotEmpty) {
+      categoryList = MyFormatters.categoryListFromJson(jsonStr);
+    }
   }
 
   void storeInDb() async {
@@ -52,7 +64,7 @@ class CategoryProvider extends ChangeNotifier {
         element.isSelected = false;
       });
       int selectedIndex = categoryList.indexOf(categoryList.firstWhere(
-          (element) => element.type == 'income' || element.type == 'expense'));
+          (element) => element.type == 'Income' || element.type == 'Expense'));
       categoryList[selectedIndex].isSelected = true;
       return selectedIndex;
     } else {

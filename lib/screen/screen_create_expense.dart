@@ -61,8 +61,7 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                   expenseDetailsProvider.selectedExpense.category.name &&
               element.type ==
                   expenseDetailsProvider.selectedExpense.category.type));
-      print(newIndex);
-      print(previousCategoryIndex);
+
       categoryProvider.categoryList[previousCategoryIndex].isSelected = false;
       categoryProvider.categoryList[newIndex].isSelected = true;
       previousCategoryIndex = newIndex;
@@ -246,7 +245,7 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                               itemBuilder: ((context, index) {
                                                 if (provider.categoryList[index]
                                                         .type ==
-                                                    'expense') {
+                                                    'Expense') {
                                                   return const SizedBox
                                                       .shrink();
                                                 }
@@ -298,7 +297,7 @@ class _CreateExpenseScreenState extends State<CreateExpenseScreen> {
                                               itemBuilder: ((context, index) {
                                                 if (provider.categoryList[index]
                                                         .type ==
-                                                    'income') {
+                                                    'Income') {
                                                   return const SizedBox
                                                       .shrink();
                                                 }

@@ -391,19 +391,19 @@ class BalancePage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                'assets/images/empty_img.png',
+                                'assets/images/empty_expense.png',
                                 width: MediaQuery.of(context).size.width / 2,
                                 height: MediaQuery.of(context).size.width / 2,
                               ),
-                              // Text(
-                              //   'Empty List',
-                              //   style: Theme.of(context)
-                              //       .textTheme
-                              //       .bodyLarge
-                              //       ?.copyWith(
-                              //           fontSize: 22,
-                              //           fontWeight: FontWeight.bold),
-                              // ),
+                              Text(
+                                'Empty List',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                              ),
                               const SizedBox(height: 20),
                               Text(
                                 'There is no record of income or expense',

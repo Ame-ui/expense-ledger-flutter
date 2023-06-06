@@ -22,7 +22,7 @@ class CalandarDateCard extends StatelessWidget {
     int expenseCount = 0;
     /* Calculate totalIncome, totalExpense, and TotalOther */
     for (int i = 0; i < expenseList.length; i++) {
-      if (expenseList[i].category.type == 'income') {
+      if (expenseList[i].category.type == 'Income') {
         totalIncome += expenseList[i].amount;
         incomeCount++;
       } else {
@@ -141,13 +141,28 @@ class CalandarDateCard extends StatelessWidget {
           Expanded(
             child: expenseList.isEmpty
                 ? Center(
-                    child: Text(
-                      'There is no income or expense in this day.\nPress + to add',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontSize: 14),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'There is no income or expense in this day',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontSize: 14),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Press + to add',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   )
                 : ListView.separated(

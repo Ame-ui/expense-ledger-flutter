@@ -93,11 +93,11 @@ class ExpenseListTile extends StatelessWidget {
                   /* Amount */
                   Expanded(
                     child: Text(
-                      (expense.category.type == 'expense' ? '-' : '+') +
+                      (expense.category.type == 'Expense' ? '-' : '+') +
                           (MyFormatters.numFormatter.format(expense.amount)),
                       textAlign: TextAlign.end,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: expense.category.type == 'expense'
+                          color: expense.category.type == 'Expense'
                               ? MyColors.redColor
                               : MyColors.greenColor,
                           fontSize: 16,

@@ -3,6 +3,7 @@ import 'package:expense_ledger/provider/provider_category.dart';
 import 'package:expense_ledger/value/colors.dart';
 import 'package:expense_ledger/widget/category_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class CategoryScreen extends StatelessWidget {
@@ -14,6 +15,10 @@ class CategoryScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.white,
+              statusBarBrightness: Brightness.dark,
+              statusBarIconBrightness: Brightness.dark),
           title: Text(
             'Category',
             style: Theme.of(context)
@@ -56,14 +61,14 @@ class CategoryScreen extends StatelessWidget {
                     color: Colors.white,
                     child: ListView.separated(
                       separatorBuilder: ((context, index) =>
-                          provider.categoryList[index].type == 'expense'
+                          provider.categoryList[index].type == 'Expense'
                               ? const SizedBox.shrink()
                               : const Divider(
                                   height: 0,
                                 )),
                       itemCount: provider.categoryList.length,
                       itemBuilder: ((context, index) {
-                        if (provider.categoryList[index].type == 'expense') {
+                        if (provider.categoryList[index].type == 'Expense') {
                           return const SizedBox.shrink();
                         }
                         return Padding(
@@ -112,14 +117,14 @@ class CategoryScreen extends StatelessWidget {
                     color: Colors.white,
                     child: ListView.separated(
                       separatorBuilder: ((context, index) =>
-                          provider.categoryList[index].type == 'income'
+                          provider.categoryList[index].type == 'Income'
                               ? const SizedBox.shrink()
                               : const Divider(
                                   height: 0,
                                 )),
                       itemCount: provider.categoryList.length,
                       itemBuilder: ((context, index) {
-                        if (provider.categoryList[index].type == 'income') {
+                        if (provider.categoryList[index].type == 'Income') {
                           return const SizedBox.shrink();
                         }
                         return Padding(
@@ -134,6 +139,7 @@ class CategoryScreen extends StatelessWidget {
                               )),
                               Row(
                                 children: [
+                                  /* Edit Button */
                                   IconButton(
                                     onPressed: () {
                                       showDialog(
@@ -145,6 +151,7 @@ class CategoryScreen extends StatelessWidget {
                                     icon: const Icon(Icons.edit),
                                     color: MyColors.greyColor,
                                   ),
+                                  /* Delete Button */
                                   IconButton(
                                     onPressed: () {
                                       provider.removeFromCategoryList(

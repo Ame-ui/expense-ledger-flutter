@@ -116,14 +116,14 @@ class ExpenseDetailsScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         color:
-                            provider.selectedExpense.category.type == 'income'
+                            provider.selectedExpense.category.type == 'Income'
                                 ? MyColors.greenColor.withOpacity(0.1)
                                 : MyColors.redColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10)),
                     child: Text(provider.selectedExpense.category.type,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: provider.selectedExpense.category.type ==
-                                    'income'
+                                    'Income'
                                 ? MyColors.greenColor
                                 : MyColors.redColor,
                             fontSize: 16,
@@ -143,10 +143,10 @@ class ExpenseDetailsScreen extends StatelessWidget {
                             fontSize: 16,
                           )),
                   Text(
-                      '${provider.selectedExpense.category.type == 'income' ? '+' : '-'}${MyFormatters.numFormatter.format(provider.selectedExpense.amount)} MMk',
+                      '${provider.selectedExpense.category.type == 'Income' ? '+' : '-'}${MyFormatters.numFormatter.format(provider.selectedExpense.amount)} MMk',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color:
-                              provider.selectedExpense.category.type == 'income'
+                              provider.selectedExpense.category.type == 'Income'
                                   ? MyColors.greenColor
                                   : MyColors.redColor,
                           fontSize: 16,

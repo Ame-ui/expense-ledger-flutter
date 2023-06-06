@@ -18,7 +18,9 @@ class ExpenseProvider extends ChangeNotifier {
   ) async {
     /* fetch expense from database */
     String jsonStr = box.get(StorageKeys.expense) ?? '';
-    allExpenseList = MyFormatters.expenseListFromJson(jsonStr);
+    if (jsonStr.isNotEmpty) {
+      allExpenseList = MyFormatters.expenseListFromJson(jsonStr);
+    }
     Provider.of<BalancePageProvider>(context, listen: false)
         .specifyExpense(allExpenseList);
   }

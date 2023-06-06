@@ -16,7 +16,7 @@ class MyFormatters {
       List<Expense>.from(json.decode(str).map((x) => Expense.fromJson(x)));
   static String expenseListToJson(List<Expense> data) =>
       json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
+  
   //category list json formatter
   static List<Category> categoryListFromJson(String str) =>
       List<Category>.from(json.decode(str).map((x) => Category.fromJson(x)));
